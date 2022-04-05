@@ -1,5 +1,10 @@
 const DEFAULT_OPTIONS = {
-  terms: ["id", "uid", "uuid"],
+  terms: [
+    ["id", "ID"],
+    ["uid", "UID"],
+    ["uuid", "UUID"],
+    ["markdown", "Markdown"],
+  ],
 };
 
 export default function (context, opts = {}) {
@@ -45,8 +50,8 @@ export default function (context, opts = {}) {
   /**
    * Match word in text.
    * Taken directly from https://github.com/sapegin/textlint-rule-terminology/blob/master/index.js.
-   * @param {*} term 
-   * @returns 
+   * @param {*} term
+   * @returns
    */
   function getRegexForTerm(term) {
     return new RegExp(
@@ -54,15 +59,15 @@ export default function (context, opts = {}) {
       // 2. Exact match of the pattern
       // 3. Space, ". ", "." at the end of the string, end of the string
       `(?<=^|[^-\\w])\\b${term}\\b(?= |\\. |\\.$|$)`,
-      'ig'
+      "ig"
     );
-    }
+  }
 
   return {
     [Syntax.Str](node) {
-      terms.forEach((term) => {
+      terms.forEach(([paramTerm, sentenceTerm]) => {
         const text = getSource(node); // Get text
-        const regex = getRegexForTerm(term);
+        const regex = getRegexForTerm(paramTerm);
         const matches = regex.exec(text);
 
         if (!matches) {
@@ -74,14 +79,14 @@ export default function (context, opts = {}) {
           return;
         }
 
-        // uppercase is fine
-        if (matches[0] === matches[0].toUpperCase()) {
+        // sentence-appropriate format is fine
+        if (matches[0] === sentenceTerm) {
           return;
         }
 
         const indexOfTerm = matches.index;
         const ruleError = new RuleError(
-          `Found term “${term}”, use “${term.toUpperCase()}” instead.`,
+          `Found term “${paramTerm}”, use “${sentenceTerm}” instead.`,
           {
             index: indexOfTerm, // padding of index
           }

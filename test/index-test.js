@@ -11,6 +11,8 @@ tester.run("rule", rule, {
     "We can refer to its ID.",
     "Using `id` in backticks should be fine.",
     "The use of the term *in* a word should be okay, like video.",
+    "We can write Markdown in a sentence.",
+    "We can refer to a [markdown](#markdown) filter.",
   ],
   invalid: [
     // single match
@@ -19,6 +21,17 @@ tester.run("rule", rule, {
       errors: [
         {
           message: "Found term “id”, use “ID” instead.",
+          line: 1,
+          column: 29,
+        },
+      ],
+    },
+    // single match
+    {
+      text: "We shouldn’t be able to use markdown lowercase in a sentence.",
+      errors: [
+        {
+          message: "Found term “markdown”, use “Markdown” instead.",
           line: 1,
           column: 29,
         },
