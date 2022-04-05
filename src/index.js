@@ -42,9 +42,21 @@ export default function (context, opts = {}) {
     });
   }
 
+  /**
+   * Match word in text.
+   * Taken directly from https://github.com/sapegin/textlint-rule-terminology/blob/master/index.js.
+   * @param {*} term 
+   * @returns 
+   */
   function getRegexForTerm(term) {
-    return new RegExp(`${term}`);
-  }
+    return new RegExp(
+      // 1. Beginning of the string, or any character that isn't "-" or alphanumeric
+      // 2. Exact match of the pattern
+      // 3. Space, ". ", "." at the end of the string, end of the string
+      `(?<=^|[^-\\w])\\b${term}\\b(?= |\\. |\\.$|$)`,
+      'ig'
+    );
+    }
 
   return {
     [Syntax.Str](node) {
@@ -59,6 +71,11 @@ export default function (context, opts = {}) {
 
         // allow this if it’s wrapped in a link or code block
         if (isNodeWrapped(node, [Syntax.Link, Syntax.Code])) {
+          return;
+        }
+
+        // uppercase is fine
+        if (matches[0] === matches[0].toUpperCase()) {
           return;
         }
 

@@ -10,6 +10,7 @@ tester.run("rule", rule, {
     "We can link to a literal param [id](#id).",
     "We can refer to its ID.",
     "Using `id` in backticks should be fine.",
+    "The use of the term *in* a word should be okay, like video.",
   ],
   invalid: [
     // single match
