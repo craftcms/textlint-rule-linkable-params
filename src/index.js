@@ -1,5 +1,5 @@
 const DEFAULT_OPTIONS = {
-  terms: ["id"],
+  terms: ["id", "uid", "uuid"],
 };
 
 export default function (context, opts = {}) {
